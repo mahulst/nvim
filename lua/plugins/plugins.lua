@@ -42,5 +42,14 @@ return {
     },
     -- change some options
   },
-  { "tpope/vim-fugitive" }
+  { "tpope/vim-fugitive" },
+  {
+    "mbbill/undotree",
+    keys = {
+      { "<leader>ut", 
+        ":UndotreeShow<CR>",
+        desc = "Toogle undo tree"
+      }
+    }
+  }
 }
