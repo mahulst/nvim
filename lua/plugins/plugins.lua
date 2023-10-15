@@ -76,18 +76,31 @@ return {
     {
         "nvim-telescope/telescope.nvim",
         keys = {
-      -- add a keymap to browse plugin files
-      -- stylua: ignore
-      {
-        "<C-p>",
-        function() require("telescope.builtin").git_files() end,
-        desc = "Find files in git",
-      },
+            -- add a keymap to browse plugin files
+            { "<leader>gs", false },
+            { "<leader>gc", false },
+            {
+                "<C-p>",
+                function()
+                    require("telescope.builtin").git_files()
+                end,
+                desc = "Find files in git",
+            },
         },
         -- change some options
     },
     {
         "tpope/vim-fugitive",
+        keys = {
+            { "<leader>gs", ":Git<CR>", desc = "Git status" },
+            { "<leader>gc", ":Git commit<CR>", desc = "Git commit" },
+            { "<leader>gr", ":Git pull --rebase<CR>", desc = "Git rebase" },
+            { "<leader>gp", ":Git push<CR>", desc = "Git push" },
+            { "<leader>gf", ":Git push --force-with-lease<CR>", desc = "Git push --force-with-lease" },
+            { "<leader>gn", ":Git commit --amend --no-edit<CR>", desc = "Git amend --no-edit" },
+            { "<leader>ga", ":Git add -- .<CR>", desc = "Git add all" },
+            { "<leader>g%", ":Git add %<CR>", desc = "Git add current file" },
+        },
     },
     {
         "mbbill/undotree",
