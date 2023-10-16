@@ -6,6 +6,12 @@ return {
                 kotlin_language_server = {},
             },
         },
+        init = function()
+            local keys = require("lazyvim.plugins.lsp.keymaps").get()
+            keys[#keys + 1] = { "<leader>cf", vim.lsp.buf.references, desc = "Find usages", mode = { "n", "v" } }
+            keys[#keys + 1] = { "<leader>cr", vim.lsp.buf.rename, desc = "Rename", mode = { "n", "v" } }
+            keys[#keys + 1] = { "<C-h>", vim.lsp.buf.signature_help, mode = { "i" } }
+        end,
     },
     {
         "ThePrimeagen/harpoon",
