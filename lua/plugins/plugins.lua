@@ -92,14 +92,14 @@ return {
     {
         "tpope/vim-fugitive",
         keys = {
-            { "<leader>gs", ":Git<CR>", desc = "Git status" },
-            { "<leader>gc", ":Git commit<CR>", desc = "Git commit" },
-            { "<leader>gr", ":Git pull --rebase<CR>", desc = "Git rebase" },
-            { "<leader>gp", ":Git push<CR>", desc = "Git push" },
-            { "<leader>gf", ":Git push --force-with-lease<CR>", desc = "Git push --force-with-lease" },
-            { "<leader>gn", ":Git commit --amend --no-edit<CR>", desc = "Git amend --no-edit" },
-            { "<leader>ga", ":Git add -- .<CR>", desc = "Git add all" },
-            { "<leader>g%", ":Git add %<CR>", desc = "Git add current file" },
+            { "<leader>gs", "<Cmd>Git<CR>", desc = "Git status" },
+            { "<leader>gc", "<Cmd>Git commit<CR>", desc = "Git commit" },
+            { "<leader>gr", "<Cmd>Git pull --rebase<CR>", desc = "Git rebase" },
+            { "<leader>gp", "<Cmd>Git push<CR>", desc = "Git push" },
+            { "<leader>gf", "<Cmd>Git push --force-with-lease<CR>", desc = "Git push --force-with-lease" },
+            { "<leader>gn", "<Cmd>Git commit --amend --no-edit<CR>", desc = "Git amend --no-edit" },
+            { "<leader>ga", "<Cmd>Git add -- .<CR>", desc = "Git add all" },
+            { "<leader>g%", "<Cmd>Git add %<CR>", desc = "Git add current file" },
         },
     },
     {
