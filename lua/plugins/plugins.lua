@@ -129,4 +129,36 @@ return {
             mappings = {},
         },
     },
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            "hrsh7th/cmp-emoji",
+        },
+        ---@param opts cmp.ConfigSchema
+        opts = function(_, opts)
+            local cmp = require("cmp")
+            opts.mapping = vim.tbl_extend("force", opts.mapping, {
+                ["<C-n>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_next_item()
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
+                ["<C-p>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item()
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
+                ["<C-y>"] = cmp.mapping(function(fallback)
+                    cmp.confirm({ select = true })
+                end, { "i", "s" }),
+                ["<C-Space>"] = cmp.mapping(function(fallback)
+                    cmp.complete()
+                end, { "i", "s" }),
+            })
+        end,
+    },
 }
