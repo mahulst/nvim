@@ -166,4 +166,8 @@ return {
         dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
         opts = {},
     },
+    {
+        "FabijanZulj/blame.nvim",
+        opts = { date_format = "%y/%m/%d %H:%M" },
+    },
 }

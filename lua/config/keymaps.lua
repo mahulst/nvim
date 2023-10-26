@@ -19,3 +19,6 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 vim.keymap.set({ "n", "v" }, "<leader><leader>s", "<cmd>w<CR>")
+
+-- Toggle git blame
+vim.keymap.set({ "n", "v" }, "<leader>gb", "<cmd>ToggleBlame<CR>")
