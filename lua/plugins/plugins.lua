@@ -111,7 +111,7 @@ return {
     {
         "mbbill/undotree",
         keys = {
-            { "<leader>ut", ":UndotreeShow<CR>", desc = "Toogle undo tree" },
+            { "<leader>uu", ":UndotreeShow<CR>", desc = "Toogle undo tree" },
         },
     },
     {
@@ -169,5 +169,10 @@ return {
     {
         "FabijanZulj/blame.nvim",
         opts = { date_format = "%y/%m/%d %H:%M" },
+    },
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        opts = {}, -- this is equalent to setup({}) function
     },
 }
