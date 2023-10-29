@@ -22,3 +22,5 @@ vim.keymap.set({ "n", "v" }, "<leader><leader>s", "<cmd>w<CR>")
 
 -- Toggle git blame
 vim.keymap.set({ "n", "v" }, "<leader>gb", "<cmd>ToggleBlame<CR>")
+
+vim.keymap.set({ "n", "v" }, "<leader>cx", "<cmd>RustRunnables<CR>")
