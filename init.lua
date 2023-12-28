@@ -210,6 +210,7 @@ require("lazy").setup({
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
+      "nvim-telescope/telescope-ui-select.nvim",
       "nvim-lua/plenary.nvim",
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
@@ -224,6 +225,15 @@ require("lazy").setup({
         end,
       },
     },
+    config = function()
+      require("telescope").setup({
+        extensions = {
+          ["ui-select"] = {
+            require("telescope.themes").get_dropdown({}),
+          },
+        },
+      })
+    end,
   },
 
   {
@@ -260,7 +270,6 @@ require("lazy").setup({
               return vim.fn.getcwd() .. "/jest.config.ts"
             end,
 
-            -- jestConfigFile = "custom.jest.config.ts",
             env = { CI = true },
             cwd = function()
               local file = vim.fn.expand("%:p")
@@ -333,7 +342,6 @@ require("lazy").setup({
         sources = {
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.prettier,
-          null_ls.builtins.diagnostics.eslint,
         },
       })
     end,
@@ -429,6 +437,7 @@ require("telescope").setup({
 
 -- Enable telescope fzf native, if installed
 pcall(require("telescope").load_extension, "fzf")
+pcall(require("telescope").load_extension, "ui-select")
 
 -- Telescope live_grep in git root
 -- Function to find the git root directory based on the current buffer's path
@@ -501,9 +510,6 @@ vim.defer_fn(function()
   require("nvim-treesitter.configs").setup({
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = {
-      "c",
-      "cpp",
-      "go",
       "lua",
       "python",
       "rust",
@@ -602,7 +608,6 @@ local on_attach = function(_, bufnr)
   nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
   nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
-  -- See `:help K` for why this keymap
   nmap("K", vim.lsp.buf.hover, "Hover Documentation")
   nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
 
@@ -629,23 +634,10 @@ require("which-key").register({
   ["<leader>h"] = { "Git [H]unk" },
 }, { mode = "v" })
 
--- mason-lspconfig requires that these setup functions are called in this order
--- before setting up the servers.
 require("mason").setup()
 require("mason-lspconfig").setup()
 
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
---
---  If you want to override the default filetypes that your language server will attach to you can
---  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
   rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { "html" } },
@@ -654,8 +646,6 @@ local servers = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
 }
