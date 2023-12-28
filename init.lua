@@ -210,7 +210,6 @@ require("lazy").setup({
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
-      "nvim-telescope/telescope-ui-select.nvim",
       "nvim-lua/plenary.nvim",
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
@@ -225,17 +224,8 @@ require("lazy").setup({
         end,
       },
     },
-    config = function()
-      require("telescope").setup({
-        extensions = {
-          ["ui-select"] = {
-            require("telescope.themes").get_dropdown({}),
-          },
-        },
-      })
-    end,
   },
-
+  { "aznhe21/actions-preview.nvim" },
   {
     -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
@@ -437,7 +427,6 @@ require("telescope").setup({
 
 -- Enable telescope fzf native, if installed
 pcall(require("telescope").load_extension, "fzf")
-pcall(require("telescope").load_extension, "ui-select")
 
 -- Telescope live_grep in git root
 -- Function to find the git root directory based on the current buffer's path
@@ -599,7 +588,7 @@ local on_attach = function(_, bufnr)
   end
 
   nmap("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
-  nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+  nmap("<leader>ca", require("actions-preview").code_actions, "[C]ode [A]ction")
 
   nmap("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
   nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
