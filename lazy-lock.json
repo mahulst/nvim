@@ -18,6 +18,7 @@
   "neotest-jest": { "branch": "main", "commit": "a394106cf053eef86d65ae04c4b93a1a7bd60aef" },
   "neotest-plenary": { "branch": "master", "commit": "dcaf5ed67a9e28a246e9783319e5aa6c9ea1c584" },
   "neotest-rust": { "branch": "main", "commit": "48c1e146ed0eb775fef6aca75903baf3cedadc01" },
+  "none-ls.nvim": { "branch": "main", "commit": "e7382de51b4cf629e56f1fa18192e716e5ba8145" },
   "nvim-cmp": { "branch": "main", "commit": "538e37ba87284942c1d76ed38dd497e54e65b891" },
   "nvim-lspconfig": { "branch": "master", "commit": "9099871a7c7e1c16122e00d70208a2cd02078d80" },
   "nvim-treesitter": { "branch": "master", "commit": "7d0b4756aba3b220d38ec0443c6cc10944060dd7" },

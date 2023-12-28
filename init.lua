@@ -283,7 +283,19 @@ require('lazy').setup({
       { "<leader>tO", function() require("neotest").output_panel.toggle() end,                            desc = "Toggle Output Panel" },
       { "<leader>tS", function() require("neotest").run.stop() end,                                       desc = "Stop" },
     },
-  }
+  }, {
+  "nvimtools/none-ls.nvim",
+  config = function()
+    local null_ls = require('null-ls')
+    null_ls.setup({
+      sources = {
+        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.diagnostics.eslint,
+      }
+    })
+  end
+}
 
 }, {})
 -- Saving with control s
