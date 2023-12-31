@@ -340,7 +340,8 @@ require("lazy").setup({
 -- Saving with control s
 vim.keymap.set({ "n", "v" }, "<C-s>", ":w!<CR>", {})
 vim.keymap.set({ "i" }, "<C-s>", "<C-o>:w!<CR>", {})
-
+-- undo highlight when pressing esc
+vim.keymap.set({ "n" }, "<esc>", ":noh<CR>", {})
 -- appending line to previous
 vim.keymap.set("n", "J", "mzJ`z")
 -- Keep cursor in middle while jumping
@@ -686,7 +687,7 @@ cmp.setup({
     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete({}),
-    ["<CR>"] = cmp.mapping.confirm({
+    ["<C-y>"] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     }),
