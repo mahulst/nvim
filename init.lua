@@ -291,6 +291,9 @@ require("lazy").setup({
 -- Saving with control s
 vim.keymap.set({ "n", "v" }, "<C-s>", ":w!<CR>", {})
 vim.keymap.set({ "i" }, "<C-s>", "<C-o>:w!<CR>", {})
+-- quit with control q
+vim.keymap.set({ "n", "v" }, "<C-q>", ":quit!<CR>", {})
+vim.keymap.set({ "i" }, "<C-q>", "<C-o>:quit!<CR>", {})
 -- undo highlight when pressing esc
 vim.keymap.set({ "n" }, "<esc>", ":noh<CR>", {})
 -- appending line to previous
@@ -555,6 +558,8 @@ require("which-key").register({
   ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
   ["<leader>t"] = { name = "[T]est", _ = "which_key_ignore" },
   ["<leader>p"] = { name = "[P]roject", _ = "which_key_ignore" },
+  ["<leader>pc"] = { name = "[P]roject [Cargo]", _ = "which_key_ignore" },
+  ["<leader>pn"] = { name = "[P]roject [N]pm", _ = "which_key_ignore" },
 })
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
