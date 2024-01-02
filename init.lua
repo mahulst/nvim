@@ -32,7 +32,14 @@ require("lazy").setup({
       { "<leader>gb", "<cmd>ToggleBlame virtual<CR>",          desc = "[G]it [B]lame" },
     },
   },
-
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+      })
+    end,
+  },
   -- Detect tabstop and shiftwidth automatically
   "tpope/vim-sleuth",
 
