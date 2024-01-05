@@ -36,8 +36,7 @@ require("lazy").setup({
     "kylechui/nvim-surround",
     event = "VeryLazy",
     config = function()
-      require("nvim-surround").setup({
-      })
+      require("nvim-surround").setup({})
     end,
   },
   -- Detect tabstop and shiftwidth automatically
@@ -246,6 +245,13 @@ require("lazy").setup({
         desc = "Run All Test Files",
       },
       {
+        "<leader>tl",
+        function()
+          require("neotest").run.run_last()
+        end,
+        desc = "Run Last",
+      },
+      {
         "<leader>tr",
         function()
           require("neotest").run.run()
@@ -262,7 +268,7 @@ require("lazy").setup({
       {
         "<leader>to",
         function()
-          require("neotest").output.open({ enter = true, auto_close = true })
+          require("neotest").output.open({ enter = true  })
         end,
         desc = "Show Output",
       },
@@ -315,6 +321,12 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set({ "n", "v" }, "<leader>pcc", ":terminal cargo check<CR>", { desc = "[C]argo [C]heck " })
 vim.keymap.set({ "n", "v" }, "<leader>pcb", ":terminal cargo build<CR>", { desc = "[C]argo [B]uild " })
 vim.keymap.set({ "n", "v" }, "<leader>pcr", ":terminal cargo run<CR>", { desc = "[C]argo [R]un " })
+vim.keymap.set(
+  { "n", "v" },
+  "<leader>pce",
+  ":terminal cargo run --example <C-r>=expand('%:t:r')<CR>",
+  { desc = "[C]argo run [E]xample" }
+)
 
 vim.keymap.set({ "n", "v" }, "<leader>pnc", ":terminal npm run lint<CR>", { desc = "[N]pm [C]heck " })
 vim.keymap.set({ "n", "v" }, "<leader>pnb", ":terminal npm run build<CR>", { desc = "[N]pm [B]uild " })
@@ -482,9 +494,9 @@ vim.defer_fn(function()
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = "<M-j>",
-        node_incremental = "<M-j>",
-        node_decremental = "<M-J>",
+        init_selection = "<M-k>",
+        node_incremental = "<M-k>",
+        node_decremental = "<M-j>",
       },
     },
     textobjects = {
@@ -542,7 +554,8 @@ local on_attach = function(_, bufnr)
 
     vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
   end
-
+  vim.keymap.set({ "n", "v" }, "<leader>cu", vim.lsp.buf.references, { desc = "LSP: [C]ode [U]sages" })
+  vim.keymap.set({ "n", "i" }, "<C-p>", vim.lsp.buf.signature_help, { desc = "LSP: [C]ode [P]arameters" })
   nmap("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
   nmap("<leader>ca", require("actions-preview").code_actions, "[C]ode [A]ction")
 
@@ -553,9 +566,10 @@ local on_attach = function(_, bufnr)
   nmap("K", vim.lsp.buf.hover, "Hover Documentation")
   nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
 
-  -- Lesser used LSP functionality
-  nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-  nmap("<leader>cf", vim.lsp.buf.format, "[C]ode [F]ormat")
+  nmap("gD", vim.lsp.buf.type_definition, "[G]oto type [D]efiniton")
+  nmap("<leader>cf", function()
+    vim.lsp.buf.format()
+  end, "[C]ode [F]ormat")
 end
 
 -- document existing key chains
@@ -626,12 +640,9 @@ cmp.setup({
       luasnip.lsp_expand(args.body)
     end,
   },
-  completion = {
-    completeopt = "menu,menuone,noinsert",
-  },
+  completion = { completeopt = "noselect" },
+  preselect = cmp.PreselectMode.None,
   mapping = cmp.mapping.preset.insert({
-    ["<C-n>"] = cmp.mapping.select_next_item(),
-    ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete({}),
@@ -639,7 +650,7 @@ cmp.setup({
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     }),
-    ["<Tab>"] = cmp.mapping(function(fallback)
+    ["<C-n>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_locally_jumpable() then
@@ -648,7 +659,7 @@ cmp.setup({
         fallback()
       end
     end, { "i", "s" }),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
+    ["<C-p>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.locally_jumpable(-1) then
