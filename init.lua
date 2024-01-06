@@ -268,7 +268,7 @@ require("lazy").setup({
       {
         "<leader>to",
         function()
-          require("neotest").output.open({ enter = true  })
+          require("neotest").output.open({ enter = true })
         end,
         desc = "Show Output",
       },
@@ -298,6 +298,59 @@ require("lazy").setup({
           null_ls.builtins.formatting.prettier,
         },
       })
+    end,
+  },
+  {
+    "mrcjkb/rustaceanvim",
+    version = "^3", -- Recommended
+    ft = { "rust" },
+    config = function()
+      vim.g.rustaceanvim = {
+        -- Plugin configuration
+        tools = {
+          autoSetHints = true,
+          inlay_hints = {
+            show_parameter_hints = true,
+            parameter_hints_prefix = "<- ",
+            other_hints_prefix = "=> ",
+          },
+        },
+        server = {
+          on_attach = function(client, bufnr)
+            require("shared/lsp")(client, bufnr)
+            require("illuminate").on_attach(client)
+
+            local bufopts = {
+              noremap = true,
+              silent = true,
+              buffer = bufnr,
+            }
+            vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
+            vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
+          end,
+          settings = {
+            -- rust-analyzer language server configuration
+            ["rust-analyzer"] = {
+              assist = {
+                importEnforceGranularity = true,
+                importPrefix = "create",
+              },
+              cargo = { allFeatures = true },
+              checkOnSave = {
+                -- default: `cargo check`
+                command = "clippy",
+                allFeatures = true,
+              },
+              inlayHints = {
+                lifetimeElisionHints = {
+                  enable = true,
+                  useParameterNames = true,
+                },
+              },
+            },
+          },
+        },
+      }
     end,
   },
 }, {})
@@ -627,6 +680,7 @@ mason_lspconfig.setup_handlers({
       filetypes = (servers[server_name] or {}).filetypes,
     })
   end,
+  ["rust_analyzer"] = function() end,
 })
 
 local cmp = require("cmp")
