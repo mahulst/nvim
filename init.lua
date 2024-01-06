@@ -13,6 +13,31 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+local on_attach = function(_, bufnr)
+  local nmap = function(keys, func, desc)
+    if desc then
+      desc = "LSP: " .. desc
+    end
+
+    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+  end
+  vim.keymap.set({ "n", "v" }, "<leader>cu", vim.lsp.buf.references, { desc = "LSP: [C]ode [U]sages" })
+  vim.keymap.set({ "n", "i" }, "<C-p>", vim.lsp.buf.signature_help, { desc = "LSP: [C]ode [P]arameters" })
+  nmap("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
+  nmap("<leader>ca", require("actions-preview").code_actions, "[C]ode [A]ction")
+
+  nmap("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+  nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+  nmap("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+
+  nmap("K", vim.lsp.buf.hover, "Hover Documentation")
+  nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+
+  nmap("gD", vim.lsp.buf.type_definition, "[G]oto type [D]efiniton")
+  nmap("<leader>cf", function()
+    vim.lsp.buf.format()
+  end, "[C]ode [F]ormat")
+end
 
 require("lazy").setup({
   {
@@ -54,6 +79,29 @@ require("lazy").setup({
 
       "folke/neodev.nvim",
     },
+    config = function()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      local lspconfig = require("lspconfig")
+      lspconfig.tsserver.setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+      })
+      lspconfig.html.setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+      })
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+          Lua = {
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+          },
+        },
+      })
+    end,
   },
   {
     "mbbill/undotree",
@@ -306,7 +354,6 @@ require("lazy").setup({
     ft = { "rust" },
     config = function()
       vim.g.rustaceanvim = {
-        -- Plugin configuration
         tools = {
           autoSetHints = true,
           inlay_hints = {
@@ -317,19 +364,11 @@ require("lazy").setup({
         },
         server = {
           on_attach = function(client, bufnr)
-            require("shared/lsp")(client, bufnr)
-            require("illuminate").on_attach(client)
-
-            local bufopts = {
-              noremap = true,
-              silent = true,
-              buffer = bufnr,
-            }
-            vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
+            on_attach(client, bufnr)
+            vim.keymap.set("n", "<leader>cR", "<Cmd>RustLsp runnables<CR>", bufopts)
             vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
           end,
           settings = {
-            -- rust-analyzer language server configuration
             ["rust-analyzer"] = {
               assist = {
                 importEnforceGranularity = true,
@@ -337,7 +376,6 @@ require("lazy").setup({
               },
               cargo = { allFeatures = true },
               checkOnSave = {
-                -- default: `cargo check`
                 command = "clippy",
                 allFeatures = true,
               },
@@ -599,32 +637,6 @@ vim.defer_fn(function()
   })
 end, 0)
 
-local on_attach = function(_, bufnr)
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = "LSP: " .. desc
-    end
-
-    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-  end
-  vim.keymap.set({ "n", "v" }, "<leader>cu", vim.lsp.buf.references, { desc = "LSP: [C]ode [U]sages" })
-  vim.keymap.set({ "n", "i" }, "<C-p>", vim.lsp.buf.signature_help, { desc = "LSP: [C]ode [P]arameters" })
-  nmap("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
-  nmap("<leader>ca", require("actions-preview").code_actions, "[C]ode [A]ction")
-
-  nmap("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-  nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-  nmap("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-
-  nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-  nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
-
-  nmap("gD", vim.lsp.buf.type_definition, "[G]oto type [D]efiniton")
-  nmap("<leader>cf", function()
-    vim.lsp.buf.format()
-  end, "[C]ode [F]ormat")
-end
-
 -- document existing key chains
 require("which-key").register({
   ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
@@ -669,18 +681,6 @@ local mason_lspconfig = require("mason-lspconfig")
 
 mason_lspconfig.setup({
   ensure_installed = vim.tbl_keys(servers),
-})
-
-mason_lspconfig.setup_handlers({
-  function(server_name)
-    require("lspconfig")[server_name].setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    })
-  end,
-  ["rust_analyzer"] = function() end,
 })
 
 local cmp = require("cmp")
