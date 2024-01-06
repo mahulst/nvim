@@ -659,13 +659,9 @@ require("mason-lspconfig").setup()
 local servers = {
   rust_analyzer = {},
   tsserver = {},
-  html = { filetypes = { "html" } },
+  html = {},
 
   lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-    },
   },
 }
 
