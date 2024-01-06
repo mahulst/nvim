@@ -13,6 +13,8 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
+-- On attach per file type that uses lsp
 local on_attach = function(_, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
@@ -70,11 +72,9 @@ require("lazy").setup({
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
 
-      -- Useful status updates for LSP
       { "j-hui/fidget.nvim", opts = {} },
 
       "folke/neodev.nvim",
@@ -147,10 +147,8 @@ require("lazy").setup({
     opts = {},
   },
   {
-    -- Adds git related signs to the gutter, as well as utilities for managing changes
     "lewis6991/gitsigns.nvim",
     opts = {
-      -- See `:help gitsigns.txt`
       signs = {
         add = { text = "+" },
         change = { text = "~" },
@@ -167,7 +165,6 @@ require("lazy").setup({
           vim.keymap.set(mode, l, r, opts)
         end
 
-        -- Navigation
         map({ "n", "v" }, "]c", function()
           if vim.wo.diff then
             return "]c"
@@ -192,7 +189,6 @@ require("lazy").setup({
   },
 
   {
-    -- Theme inspired by Atom
     "navarasu/onedark.nvim",
     priority = 1000,
     config = function()
@@ -201,9 +197,7 @@ require("lazy").setup({
   },
 
   {
-    -- Set lualine as statusline
     "nvim-lualine/lualine.nvim",
-    -- See `:help lualine.txt`
     opts = {
       options = {
         icons_enabled = false,
@@ -222,12 +216,18 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope-ui-select.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
         cond = function()
           return vim.fn.executable("make") == 1
         end,
+      },
+    },
+    opts = {
+      extensions = {
+        ["ui-select"] = {},
       },
     },
   },
@@ -661,8 +661,7 @@ local servers = {
   tsserver = {},
   html = {},
 
-  lua_ls = {
-  },
+  lua_ls = {},
 }
 
 -- Setup neovim lua configuration
@@ -725,6 +724,6 @@ cmp.setup({
     { name = "path" },
   },
 })
-
+require("telescope").load_extension("ui-select")
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
